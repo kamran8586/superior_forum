@@ -1,0 +1,26 @@
+.title{
+    color: #3e8ed0;
+}
+.contact{
+    margin-bottom: -20px;
+}
+
+.footer {
+    background-color: #3e8ed0;
+    color: #fff;
+    padding: 2rem 0;
+}
+
+.footer p {
+    margin-bottom: 0;
+}
+
+.social-media-icons a {
+    color: #fff;
+    margin-right: 1rem;
+    transition: color 0.3s ease;
+}
+
+.social-media-icons a:hover {
+    color: #f0f0f0;
+}

@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}
+Home
+{% endblock %}
+
+{% block content %}
+
+{% comment %} Hero Section {% endcomment %}
+<section class="hero is-medium">
+    <div class="hero-body">
+        <div class="columns">
+            <div class="column is-half">
+                <h1 class="title mb-3">
+                    Ask Question you want!
+                </h1>
+                <p class="subtitle is-normal mt-3">
+                    Lorem ipsum dolor sit amet consectetur adipisicing elit.
+                    Fuga
+                    similique voluptate necessitatibus delectus nisi molestiae
+                    magni?
+                    Ad, sequi? Necessitatibus vero cum quis aperiam, labore illo
+                    repudiandae rerum praesentium? Magnam, odio sunt ducimus
+                    facilis
+                    totam voluptatum.
+                </p>
+                <div class="buttons">
+                    <a href="{% url 'forum:contact' %}" class="button is-light mr-3">Contact</a>
+                    <a href class="button is-info">Forum</a>
+                </div>
+            </div>
+            <div class="column is-half">
+                <img src="{% static 'images/hero.png' %}" width="600"
+                    alt="Hero">
+            </div>
+        </div>
+
+    </div>
+</section>
+
+<section class="contact">
+    <h2 class="subtitle has-text-centered mb-5">
+        Contact Us
+    </h2>
+    <div class="columns">
+        <div class="column is-half mb-2">
+            <img src="{% static 'images/contact.png' %}" alt="contact">
+        </div>
+        <div class="column is-half">
+            <div class="field">
+                <label class="label">Name</label>
+                <div class="control">
+                    <input class="input" type="text" placeholder="e.g. John">
+                </div>
+            </div>
+            <div class="field">
+                <label class="label">Message</label>
+                <div class="control">
+                    <textarea class="textarea" placeholder="Query..."
+                        rows="12"></textarea>
+                </div>
+            </div>
+            <div class="field">
+                <input class="button is-info is-fullwidth" type="submit" value="Send">
+            </div>
+        </div>
+    </div>
+</section>
+
+
+{% endblock %}
