@@ -37,35 +37,8 @@ Home
 
     </div>
 </section>
-
-<section class="contact">
-    <h2 class="subtitle has-text-centered mb-5">
-        Contact Us
-    </h2>
-    <div class="columns">
-        <div class="column is-half mb-2">
-            <img src="{% static 'images/contact.png' %}" alt="contact">
-        </div>
-        <div class="column is-half">
-            <div class="field">
-                <label class="label">Name</label>
-                <div class="control">
-                    <input class="input" type="text" placeholder="e.g. John">
-                </div>
-            </div>
-            <div class="field">
-                <label class="label">Message</label>
-                <div class="control">
-                    <textarea class="textarea" placeholder="Query..."
-                        rows="12"></textarea>
-                </div>
-            </div>
-            <div class="field">
-                <input class="button is-info is-fullwidth" type="submit" value="Send">
-            </div>
-        </div>
-    </div>
-</section>
+<h2 class="subtitle has-text-centered mb-5">Contact Us</h2>
+{% include "forum/contact_form.html" %}
 
 
 {% endblock %}

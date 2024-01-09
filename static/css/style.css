@@ -24,3 +24,11 @@
 .social-media-icons a:hover {
     color: #f0f0f0;
 }
+
+.login{
+    margin-top: 31px;
+}
+
+.border-left{
+    border-left: 1px solid #807e7ea8;
+}

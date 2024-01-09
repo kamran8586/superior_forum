@@ -19,7 +19,7 @@
         Home
       </a>
 
-      <a class="navbar-item">
+      <a href="{% url 'forum:forum_page' %}" class="navbar-item">
         Forum
       </a>
       <a href="{% url 'forum:contact' %}" class="navbar-item">
@@ -29,14 +29,23 @@
 
     <div class="navbar-end">
       <div class="navbar-item">
+      {% if user.is_authenticated %}
+      <h2>Welcome <strong>{{user.first_name}}</strong></h2>
+      <form method="post" action="{% url 'authentication:logout' %}">
+          {% csrf_token %}
+           <button class="button is-ghost" type="submit">Logout</button>
+      </form>
+     
+      {% else %}
         <div class="buttons">
           <a href="{% url 'authentication:login' %}" class="button is-light">
             Log in
           </a>
-          <a class="button is-info">
+          <a href="{% url 'authentication:signup' %}" class="button is-info">
             <strong>Sign up</strong>
           </a>
         </div>
+        {% endif %}
       </div>
     </div>
   </div>

@@ -1,0 +1,36 @@
+{% load static %}
+
+<section class="contact mt-6">
+    <div class="columns">
+        <div class="column is-half mb-2">
+            <img src="{% static 'images/contact.png' %}" alt="contact">
+        </div>
+        <div class="column is-half">
+            <form action="https://formspree.io/f/mayryrvb" method="POST">
+                <div class="field">
+                    <label class="label">Email</label>
+                    <div class="control">
+                        <input class="input" type="text" name="Email"
+                            placeholder="e.g. john@email.com" required>
+                    </div>
+                </div>
+                <div class="field">
+                    <label class="label">Name</label>
+                    <div class="control">
+                        <input class="input" type="text" name="Name"
+                            placeholder="e.g. John" required>
+                    </div>
+                </div>
+                <div class="field">
+                    <label class="label">Message</label>
+                    <div class="control">
+                        <textarea class="textarea" placeholder="Query..." name="Message" required
+                            rows="10"></textarea>
+                    </div>
+                </div>
+                <div class="field">
+                    <button class="button is-info is-fullwidth" type="submit">Send</button>
+                </div>
+            </form>
+        </div>
+    </div>

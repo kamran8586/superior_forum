@@ -10,3 +10,8 @@ class ContactPageView(View):
     template_name = 'forum/contact.html'
     def get(self, request):
         return render(request, self.template_name)
+    
+class ForumPageView(View):
+    template_name = 'forum/forum_page.html'
+    def get(self, request):
+        return render(request, self.template_name)

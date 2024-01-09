@@ -1,22 +1,38 @@
 {% extends "base.html" %}
-
+{% block title %}
+Sign Up
+{% endblock %}
 {% block content %}
-  <form method="post" action="{% url 'authentication:login' %}">
-    {% csrf_token %}
+ <section class="section is-fullheight login">
+  <div class="container">
+    <div class="columns is-centered">
+      <div class="column is-half">
+        <h1 class="title has-text-centered">Login</h1>
 
-    {% for field in form %}
-      <div class="field">
-        <label class="label">{{ field.label }}</label>
-        <div class="control">
-          {{ field }}
-        </div>
-      </div>
-    {% endfor %}
+        <form method="post" action="{% url 'authentication:login' %}">
+          {% csrf_token %}
 
-    <div class="field">
-      <div class="control">
-        <button class="button is-primary" type="submit">Login</button>
+          {% for field in form %}
+            <div class="field">
+              <label class="label">{{ field.label }}</label>
+              <div class="control">
+                {{ field }}
+              </div>
+            </div>
+          {% endfor %}
+ <p class="">
+          Don't have an account? <a href="{% url 'authentication:signup' %}">Sign up here</a>.
+        </p>
+          <div class="field mt-4">
+            <div class="control">
+              <button class="button is-info is-fullwidth" type="submit">Login</button>
+            </div>
+          </div>
+        </form>
+
       </div>
     </div>
-  </form>
+  </div>
+</section>
+
 {% endblock %}
