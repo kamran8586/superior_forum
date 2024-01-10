@@ -1,0 +1,9 @@
+<div class="column is-one-quarter border-left">
+    <h2 class="subtitle ">Recent Questions</h2>
+
+    <ul class>
+        {% for p in posts %}
+        <li><a href="#">{{p.title}}</a></li>
+        {% endfor %}
+    </ul>
+</div>
