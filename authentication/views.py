@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from .forms import UserRegistrationForm
-from .forms import LoginUserForm
+from .forms import LoginUserForm 
 from django.views import View
 from .models import UserProfile
 
@@ -45,3 +45,4 @@ class LogoutView(View):
     def post(self, request):
         logout(request)
         return redirect('authentication:login')
+    

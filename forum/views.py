@@ -2,8 +2,9 @@ from django.shortcuts import render , redirect
 from django.views import View
 from django.shortcuts import get_object_or_404
 from django.http import JsonResponse
-
-from .models import Post , Like , Comment , Reply
+from .forms import PostForm
+from .models import Post , Like , Comment , Reply 
+from django.contrib.auth.mixins import LoginRequiredMixin
 # Create your views here.
 class HomePageView(View):
     template_name = 'forum/home.html'
@@ -17,9 +18,9 @@ class ContactPageView(View):
     
 class ForumPageView(View):
     template_name = 'forum/forum_page.html'
-    posts = Post.objects.all().order_by('-updated_at')
     def get(self, request):
-        return render(request, self.template_name , {'posts' : self.posts})
+        posts = Post.objects.all().order_by('-created_at')
+        return render(request, self.template_name , {'posts' : posts})
     
 class PostDetailView(View):
     template_name = 'forum/post_detail.html'
@@ -28,21 +29,28 @@ class PostDetailView(View):
         post = Post.objects.get(pk=pk)
         # recent_posts = Post.objects.exclude(pk=pk)[:5]
         return render(request, self.template_name, {'post' : post })
+class PostDeleteView(LoginRequiredMixin, View):
+    def post(self, request, pk):
+        post = get_object_or_404(Post, pk=pk)
+        if post.author == request.user:
+            post.delete()
+            return redirect('forum:forum_page')
+        return redirect('forum:forum_page')
     
 class LikeView(View):
     def post(self, request, pk):
         post = get_object_or_404(Post, pk=pk)
-        user = request.user  # Assuming you have authentication enabled
+        user = request.user 
+        existing_like = Like.objects.filter(post=post, user=user).first()
 
-        # Check if the user has already liked the post
-        if not Like.objects.filter(post=post, user=user).exists():
-            # If not, create a new Like instance
-            like = Like(post=post, user=user)
-            like.save()
-            return JsonResponse({'status': 'liked'})
+        if existing_like:
+            existing_like.delete()
         else:
-            # If the user has already liked the post, you can handle it accordingly
-            return JsonResponse({'status': 'already_liked'})
+            new_like = Like(post=post, user=user)
+            new_like.save()
+
+        return redirect('forum:forum_page')
+
         
 class CreateCommentView(View):
     def post(self, request, pk):
@@ -66,3 +74,20 @@ class CreateReplyView(View):
         reply.save()
 
         return redirect('forum:post_detail', pk=pk)
+    
+class AskQuestionView(LoginRequiredMixin , View):
+    login_url = 'authentication:login'
+    def get(self, request):
+        form = PostForm()
+        return render(request, 'forum/ask_question.html', {'form': form})
+
+    def post(self, request):
+        current_user = request.user
+        form = PostForm(request.POST , request.FILES)
+        print(request.FILES)
+        if form.is_valid():
+            form.instance.author = request.user
+            form.save()
+            return redirect('forum:forum_page')
+        else:
+            return render(request , 'forum/ask_question.html' , {'form': form})

@@ -17,6 +17,19 @@ class Post(models.Model):
         minutes = (timezone.now() - self.created_at).total_seconds() / 60
         return int(minutes)
     
+    def delete(self, *args, **kwargs):
+        # Delete the associated image file when the post is deleted
+        if self.image:
+            storage, path = self.image.storage, self.image.path
+            super(Post, self).delete(*args, **kwargs)
+            storage.delete(path)
+        else:
+            super(Post, self).delete(*args, **kwargs)
+            
+    def is_liked_by_user(self, user):
+        return self.likes.filter(user=user).exists()
+
+    
 
 class Like(models.Model):
     post = models.ForeignKey(Post,related_name='likes' , on_delete=models.CASCADE , db_index = True)

@@ -35,3 +35,11 @@
 .post-content{
     color: #1a1919;
 }
+
+.container{
+    min-height: 84vh;
+}
+
+/* .my-icon{
+    padding-right: .5rem;
+} */

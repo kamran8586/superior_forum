@@ -13,33 +13,43 @@
                 <p class="subtitle is-6">Posted by {{ post.author.first_name }}
                     on {{ post.created_at|date:"F d, Y" }}</p>
                 <p class="content">{{ post.content }}</p>
+                {% if post.image %}
                 <img src="{{post.image.url}}" alt="Image" />
+                {% endif %}
                 <nav class="level is-mobile">
                     <div class="level-left">
-                        <a
-                            class="level-item like-button is-flex is-flex-direction-column"
-                            aria-label="like"
-                            data-post-id="{{ post.id }}">
-                            <span class="icon is-small">
-                                <i class="fas fa-heart"
-                                    aria-hidden="true"></i>
-                            </span>
-                            <span class="like-count">{{post.likes.count}}</span>
-                        </a>
-                        <a class="level-item is-flex is-flex-direction-column"
-                            aria-label="like">
-                            <span class="icon is-small">
+                        <form method="post"
+                            action="{% url 'forum:like_post' post.id %}"
+                            class>
+                            {% csrf_token %}
+                            <button type="submit"
+                                class="button is-ghost my-icon"
+                                aria-label="like">
+                                <span class="icon is-small has-text-info">
+                                    <i class="fas fa-heart"
+                                        aria-hidden="true"></i>
+                                </span>
+                                <span>{{ post.likes.count }}</span>
+                            </button>
+                        </form>
+
+                        <a href="{% url 'forum:post_detail' post.id %}"
+                            class="button is-ghost my-icon"
+                            aria-label="delete">
+                            <span
+                                class="icon is-small has-text-info">
                                 <i class="fas fa-comment"
                                     aria-hidden="true"></i>
                             </span>
-                            <span class="comment-count">{{post.comments.count}}</span>
+                            <span> {{post.comments.count}}</span>
                         </a>
                     </div>
                 </nav>
                 <div class="box">
                     {% if user.is_authenticated %}
-                    <form action = "{% url 'forum:create_comment' post.id %}" method="POST">
-                    {% csrf_token %}
+                    <form action="{% url 'forum:create_comment' post.id %}"
+                        method="POST">
+                        {% csrf_token %}
                         <div class="field">
                             <div class="control">
                                 <textarea class="textarea" name="content"
@@ -55,67 +65,75 @@
                         </div>
                     </form>
                     {% else %}
-                   
-                    <h2 class="subtitle">You need to Login to comment. <a href="{% url 'authentication:login' %}">Login Here.</a></h2>
-                    
-                    
+
+                    <h2 class="subtitle">You need to Login to comment. <a
+                            href="{% url 'authentication:login' %}">Login
+                            Here.</a></h2>
+
                     {% endif %}
                 </div>
                 <div>
                     {% if post.comments %}
                     {% for comment in post.comments.all %}
-                        <div class="box">
-                            <div class="content">
-                                <p>
-                                    <strong>{{ comment.user.first_name }}
-                                        {{comment.user.last_name}}</strong>
-                                    <br>
-                                    {{ comment.content }}
-                                </p>
-                            </div>
-                            {% if comment.replies.all %}
-                                <div class="replies">
-                                    {% for reply in comment.replies.all %}
-                                        <div class="box reply-box">
-                                            <div class="content">
-                                                <p>
-                                                    <strong>{{ reply.user.first_name }}
-                                                        {{reply.user.last_name}}</strong>
-                                                    <br>
-                                                    {{ reply.content }}
-                                                </p>
-                                            </div>
-                                        </div>
-                                    {% endfor %}
-                                </div>
-                            {% endif %}
-                             {% if user.is_authenticated %}
-                            <form action="{% url 'forum:create_reply' pk=post.pk comment_pk=comment.pk %}" method="post">
-                            {% csrf_token %}
-                                <input type="hidden" name="post_pk" value="{{ post.pk }}">
-                                <input type="hidden" name="comment_pk" value="{{ comment.pk }}">
-                                {% csrf_token %}
-                                <div class="field">
-                                    <div class="control">
-                                        <textarea class="textarea" name="content"
-                                                  placeholder="Add your reply..."></textarea>
-                                    </div>
-                                </div>
-                                <div class="field">
-                                    <div class="control">
-                                        <button type="submit" class="button is-link">
-                                            Reply
-                                        </button>
-                                    </div>
-                                </div>
-                            </form>
-                             {% else %}
-                            <h2 class="subtitle  mt-4">You need to Login to Reply. <a href="{% url 'authentication:login' %}">Login Here.</a></h2>
-                            {% endif %}
+                    <div class="box">
+                        <div class="content">
+                            <p>
+                                <strong>{{ comment.user.first_name }}
+                                    {{comment.user.last_name}}</strong>
+                                <br>
+                                {{ comment.content }}
+                            </p>
                         </div>
+                        {% if comment.replies.all %}
+                        <div class="replies">
+                            {% for reply in comment.replies.all %}
+                            <div class="box reply-box">
+                                <div class="content">
+                                    <p>
+                                        <strong>{{ reply.user.first_name }}
+                                            {{reply.user.last_name}}</strong>
+                                        <br>
+                                        {{ reply.content }}
+                                    </p>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                        {% endif %}
+                        {% if user.is_authenticated %}
+                        <form
+                            action="{% url 'forum:create_reply' pk=post.pk comment_pk=comment.pk %}"
+                            method="post">
+                            {% csrf_token %}
+                            <input type="hidden" name="post_pk"
+                                value="{{ post.pk }}">
+                            <input type="hidden" name="comment_pk"
+                                value="{{ comment.pk }}">
+                            {% csrf_token %}
+                            <div class="field">
+                                <div class="control">
+                                    <textarea class="textarea" name="content"
+                                        placeholder="Add your reply..."></textarea>
+                                </div>
+                            </div>
+                            <div class="field">
+                                <div class="control">
+                                    <button type="submit"
+                                        class="button is-link">
+                                        Reply
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                        {% else %}
+                        <h2 class="subtitle  mt-4">You need to Login to Reply.
+                            <a href="{% url 'authentication:login' %}">Login
+                                Here.</a></h2>
+                        {% endif %}
+                    </div>
                     {% endfor %}
-                {% endif %}
-                
+                    {% endif %}
+
                 </div>
             </div>
             {% comment %} {% include "forum/sidebar.html" %} {% endcomment %}

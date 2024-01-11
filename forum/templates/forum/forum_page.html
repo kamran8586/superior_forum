@@ -9,6 +9,8 @@ Forum
 <section class="section">
     <div class="columns">
         <div class="column is-three-quarters">
+            <a href="{% url 'forum:ask_question' %}"
+                class="button is-info mb-3">Ask Questions ?</a>
             {% for post in posts %}
             <div class="box">
                 <article class="media">
@@ -27,25 +29,50 @@ Forum
                         </div>
                         <nav class="level is-mobile">
                             <div class="level-left">
-                                <a class="level-item like-button"
-                                    aria-label="like"
-                                    data-post-id="{{ post.id }}">
-                                    <span class="icon is-small">
-                                        <i class="fas fa-heart"
-                                            aria-hidden="true"></i>
-                                    </span>
-                                    <span class="like-count">{{ post.likes.count}}</span>
-                                </a>
-                                <a class="level-item" aria-label="like">
-                                    <span class="icon is-small">
+                                <form method="post"
+                                    action="{% url 'forum:like_post' post.id %}"
+                                    class>
+                                    {% csrf_token %}
+                                    <button type="submit"
+                                        class="button is-ghost my-icon"
+                                        aria-label="like">
+                                        <span class="icon is-small has-text-info">
+                                            <i class="fas fa-heart"
+                                                aria-hidden="true"></i>
+                                        </span>
+                                        <span>{{ post.likes.count }}</span>
+                                    </button>
+                                </form>
+
+                                <a href="{% url 'forum:post_detail' post.id %}"
+                                    class="button is-ghost my-icon"
+                                    aria-label="delete">
+                                    <span
+                                        class="icon is-small has-text-info">
                                         <i class="fas fa-comment"
                                             aria-hidden="true"></i>
                                     </span>
-                                    15
+                                    <span> {{post.comments.count}}</span>
                                 </a>
                             </div>
                         </nav>
                     </div>
+                    {% if post.author == user %}
+                    <div class="media-right">
+                        <form method="post"
+                            action="{% url 'forum:delete_post' post.id %}">
+                            {% csrf_token %}
+                            <button type="submit" class="button is-ghost"
+                                aria-label="delete">
+                                <span class="icon is-small has-text-danger">
+                                    <i class="fas fa-trash"
+                                        aria-hidden="true"></i>
+                                </span>
+                            </button>
+                        </form>
+                    </div>
+                    {% endif %}
+
                 </article>
             </div>
             {% endfor %}
