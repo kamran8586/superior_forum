@@ -11,11 +11,13 @@ class HomePageView(View):
     def get(self, request):
         return render(request, self.template_name)
     
+
 class ContactPageView(View):
     template_name = 'forum/contact.html'
     def get(self, request):
         return render(request, self.template_name)
     
+
 class ForumPageView(View):
     template_name = 'forum/forum_page.html'
     def get(self, request):
@@ -29,6 +31,7 @@ class PostDetailView(View):
         post = Post.objects.get(pk=pk)
         # recent_posts = Post.objects.exclude(pk=pk)[:5]
         return render(request, self.template_name, {'post' : post })
+    
 class PostDeleteView(LoginRequiredMixin, View):
     def post(self, request, pk):
         post = get_object_or_404(Post, pk=pk)
@@ -37,6 +40,24 @@ class PostDeleteView(LoginRequiredMixin, View):
             return redirect('forum:forum_page')
         return redirect('forum:forum_page')
     
+    
+class AskQuestionView(LoginRequiredMixin , View):
+    login_url = 'authentication:login'
+    def get(self, request):
+        form = PostForm()
+        return render(request, 'forum/ask_question.html', {'form': form})
+
+    def post(self, request):
+        current_user = request.user
+        form = PostForm(request.POST , request.FILES)
+        print(request.FILES)
+        if form.is_valid():
+            form.instance.author = request.user
+            form.save()
+            return redirect('forum:forum_page')
+        else:
+            return render(request , 'forum/ask_question.html' , {'form': form})
+        
 class LikeView(View):
     def post(self, request, pk):
         post = get_object_or_404(Post, pk=pk)
@@ -62,6 +83,15 @@ class CreateCommentView(View):
         comment.save()
 
         return redirect('forum:post_detail', pk=pk)
+
+class DeleteCommentView(View):
+    def post(self, request,  pk , post_pk):
+        post = get_object_or_404(Post, pk=post_pk)
+        comment = get_object_or_404(Comment, pk=pk)
+        user = request.user 
+        if user == comment.user:
+            comment.delete()
+        return redirect('forum:post_detail', pk=post_pk)
     
 class CreateReplyView(View):
     def post(self, request, pk, comment_pk):
@@ -75,19 +105,3 @@ class CreateReplyView(View):
 
         return redirect('forum:post_detail', pk=pk)
     
-class AskQuestionView(LoginRequiredMixin , View):
-    login_url = 'authentication:login'
-    def get(self, request):
-        form = PostForm()
-        return render(request, 'forum/ask_question.html', {'form': form})
-
-    def post(self, request):
-        current_user = request.user
-        form = PostForm(request.POST , request.FILES)
-        print(request.FILES)
-        if form.is_valid():
-            form.instance.author = request.user
-            form.save()
-            return redirect('forum:forum_page')
-        else:
-            return render(request , 'forum/ask_question.html' , {'form': form})

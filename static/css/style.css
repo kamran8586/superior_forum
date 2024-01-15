@@ -40,6 +40,11 @@
     min-height: 84vh;
 }
 
-/* .my-icon{
-    padding-right: .5rem;
-} */
+.my-icon:focus{
+    outline: none;
+    border: none;
+    box-shadow: none !important;
+}
+.reply-box{
+    box-shadow: none;
+}

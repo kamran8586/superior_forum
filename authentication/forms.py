@@ -19,7 +19,7 @@ class UserRegistrationForm(forms.ModelForm):
             'password' : forms.PasswordInput(attrs={'class': 'input'}),
         }
 
-    def clean(self):
+    def clean(self): # Execute when form is validating
         cleaned_data = super().clean()
         password = cleaned_data.get('password')
         confirm_password = cleaned_data.get('confirm_password')
@@ -27,7 +27,7 @@ class UserRegistrationForm(forms.ModelForm):
         if password != confirm_password:
             raise forms.ValidationError("Passwords do not match.")
 
-    def save(self, commit=True):
+    def save(self, commit=True): # Execute when form is saving
         user = super().save(commit=False)
         user.password = make_password(self.cleaned_data['password'])
 

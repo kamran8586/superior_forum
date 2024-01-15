@@ -26,6 +26,7 @@ class LoginView(View):
     def get(self, request):
         form = LoginUserForm()
         return render(request, self.template_name , {'form': form})
+    
     def post(self, request):
         form = LoginUserForm(request.POST)
         if form.is_valid():
@@ -41,6 +42,7 @@ class LoginView(View):
 
         return render(request, self.template_name, {'form': form})
     
+
 class LogoutView(View):
     def post(self, request):
         logout(request)

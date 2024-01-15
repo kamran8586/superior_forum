@@ -2,11 +2,19 @@ from django.db import models
 from authentication.models import UserProfile
 from django.utils import timezone
 
+class Category(models.Model):
+    title = models.TextField(max_length = 100)
+
+class Tag(models.Model):
+    title = models.TextField(max_length = 100)
+
 class Post(models.Model):
     author = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
     title = models.CharField(max_length=100)
     content = models.TextField()
     image = models.ImageField(upload_to='static/media/posts', blank=True)
+    # category = models.ForeignKey(Category , on_delete= models.CASCADE)
+    # tags = models.ManyToManyField(Tag , null=True  , blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 

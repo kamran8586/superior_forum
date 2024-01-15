@@ -11,6 +11,7 @@ Forum
         <div class="column is-three-quarters">
             <a href="{% url 'forum:ask_question' %}"
                 class="button is-info mb-3">Ask Questions ?</a>
+            {% comment %} Display All posts {% endcomment %}
             {% for post in posts %}
             <div class="box">
                 <article class="media">
@@ -72,13 +73,11 @@ Forum
                         </form>
                     </div>
                     {% endif %}
-
                 </article>
             </div>
             {% endfor %}
         </div>
         {% include "forum/sidebar.html" %}
-
     </div>
 </section>
 
