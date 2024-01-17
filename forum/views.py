@@ -5,6 +5,7 @@ from django.http import JsonResponse
 from .forms import PostForm
 from .models import Post , Like , Comment , Reply 
 from django.contrib.auth.mixins import LoginRequiredMixin
+from authentication.models import ProfileInfo
 # Create your views here.
 class HomePageView(View):
     template_name = 'forum/home.html'
@@ -20,9 +21,25 @@ class ContactPageView(View):
 
 class ForumPageView(View):
     template_name = 'forum/forum_page.html'
+
     def get(self, request):
-        posts = Post.objects.all().order_by('-created_at')
-        return render(request, self.template_name , {'posts' : posts})
+        if request.user:
+            user_profile = ProfileInfo.objects.get(user=request.user)
+            following_users = user_profile.follows.all()
+
+            # Get posts from users the current user is following
+            followed_posts = Post.objects.filter(author__profile__in=following_users).order_by('-created_at')
+
+            # Get posts from other users
+            other_posts = Post.objects.exclude(author__profile__in=following_users).order_by('-created_at')
+
+            # Concatenate the two querysets
+            posts = followed_posts | other_posts
+
+        else:
+            posts = Post.objects.all().order_by('-created_at')
+
+        return render(request, self.template_name, {'posts': posts})
     
 class PostDetailView(View):
     template_name = 'forum/post_detail.html'
@@ -60,15 +77,16 @@ class AskQuestionView(LoginRequiredMixin , View):
         
 class LikeView(View):
     def post(self, request, pk):
-        post = get_object_or_404(Post, pk=pk)
-        user = request.user 
-        existing_like = Like.objects.filter(post=post, user=user).first()
+        if request.user:
+            post = get_object_or_404(Post, pk=pk)
+            user = request.user 
+            existing_like = Like.objects.filter(post=post, user=user).first()
 
-        if existing_like:
-            existing_like.delete()
-        else:
-            new_like = Like(post=post, user=user)
-            new_like.save()
+            if existing_like:
+                existing_like.delete()
+            else:
+                new_like = Like(post=post, user=user)
+                new_like.save()
 
         return redirect('forum:forum_page')
 

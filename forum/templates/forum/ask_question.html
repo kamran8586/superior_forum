@@ -9,6 +9,18 @@ Ask Question
 <form action="{% url 'forum:ask_question' %}" class="mb-3" method="POST" enctype="multipart/form-data">
 {% csrf_token %}
     {% for field in form %}
+    {% if field.label == "Category" %}
+
+    
+
+<div class="select mb-3">
+
+        
+            {{ field }}
+
+        {{field.errors}}
+        </div>
+    {% else %}
     <div class="field">
         <label class="label">{{ field.label }}</label>
         <div class="control">
@@ -16,6 +28,7 @@ Ask Question
         </div>
         {{field.errors}}
     </div>
+    {% endif %}
     {% endfor %}
     <button class="button is-info is-fullwidth" type="submit">Submit</button>
 </form>

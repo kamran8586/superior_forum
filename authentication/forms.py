@@ -1,5 +1,5 @@
 from django import forms
-from .models import UserProfile
+from .models import UserProfile , ProfileInfo
 from django.contrib.auth.hashers import make_password
 
 class LoginUserForm(forms.Form):
@@ -35,3 +35,15 @@ class UserRegistrationForm(forms.ModelForm):
             user.save()
 
         return user
+
+class ProfileInfoForm(forms.ModelForm):
+    class Meta:
+        model = ProfileInfo
+        fields = ['profile_pic' , 'bio' , 'date_of_birth' , 'location']
+        widgets = {
+            'profile_pic' : forms.FileInput(attrs={'class': 'input'}),
+            'bio' : forms.Textarea(attrs={'class': 'input'}),
+            'date_of_birth' : forms.DateInput(attrs={'class': 'input' , 'type' : 'date'}),
+            'location' : forms.TextInput(attrs={'class': 'input'}),
+        }
+

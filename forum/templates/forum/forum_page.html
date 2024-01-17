@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% load static %}
-
+{% load filters %}
 {% block title %}
 Forum
 {% endblock %}
@@ -18,8 +18,11 @@ Forum
                     <div class="media-content">
                         <div class="content">
                             <p>
-                                <small>{{post.author.first_name}}
-                                    {{post.author.last_name}}</small>
+                                <a
+                                    href="{% url 'authentication:user_profile' post.author.id %}">
+                                    <small>{{post.author.first_name}}
+                                        {{post.author.last_name}}</small>
+                                </a>
                                 <small>{{post.get_posted_time_in_minutes}}m</small>
                                 <br>
                                 <strong>{{post.title}}</strong>
@@ -30,20 +33,37 @@ Forum
                         </div>
                         <nav class="level is-mobile">
                             <div class="level-left">
+                                {% if user.is_authenticated %}
                                 <form method="post"
                                     action="{% url 'forum:like_post' post.id %}"
-                                    class>
+                                    class="like-form">
                                     {% csrf_token %}
                                     <button type="submit"
                                         class="button is-ghost my-icon"
                                         aria-label="like">
-                                        <span class="icon is-small has-text-info">
+                                        {% if post|is_liked_by_user:user %}
+                                        <span
+                                            class="icon is-small has-text-danger">
                                             <i class="fas fa-heart"
                                                 aria-hidden="true"></i>
                                         </span>
+                                        {% else %}
+                                        <span
+                                            class="icon is-small has-text-info">
+                                            <i class="fas fa-heart"
+                                                aria-hidden="true"></i>
+                                        </span>
+                                        {% endif %}
                                         <span>{{ post.likes.count }}</span>
                                     </button>
                                 </form>
+                                {% else %}
+                                <span class="icon is-small has-text-info mr-1">
+                                    <i class="fas fa-heart"
+                                        aria-hidden="true"></i>
+                                </span>
+                                <span>{{ post.likes.count }}</span>
+                                {% endif %}
 
                                 <a href="{% url 'forum:post_detail' post.id %}"
                                     class="button is-ghost my-icon"

@@ -4,17 +4,20 @@ from django.utils import timezone
 
 class Category(models.Model):
     title = models.TextField(max_length = 100)
+    
+    def __str__(self):
+        return self.title
 
 class Tag(models.Model):
     title = models.TextField(max_length = 100)
 
 class Post(models.Model):
-    author = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
+    author = models.ForeignKey(UserProfile, on_delete=models.CASCADE , related_name = "post_set")
     title = models.CharField(max_length=100)
     content = models.TextField()
     image = models.ImageField(upload_to='static/media/posts', blank=True)
     category = models.ForeignKey(Category , on_delete= models.CASCADE)
-    tags = models.ManyToManyField(Tag)
+    tags = models.ManyToManyField(Tag , blank = True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 

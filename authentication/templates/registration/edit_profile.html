@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="columns is-centered">
+  <div class="column is-half">
+    {% comment %} {% if user.profile %} {% endcomment %}
+      {% comment %} <form method="put" action="{% url 'authentication:edit_profile' %}" enctype="multipart/form-data"> {% endcomment %}
+    {% comment %} {% else %} {% endcomment %}
+      <form method="post" action="{% url 'authentication:edit_profile' %}" enctype="multipart/form-data">
+    {% comment %} {% endif %} {% endcomment %}
+      {% csrf_token %}
+      {% for field in form %}
+        <div class="field">
+          <label class="label">{{ field.label }}</label>
+          <div class="control">
+            {{ field }}
+          </div>
+        </div>
+      {% endfor %}
+
+      <div class="field mt-4">
+        <div class="control">
+          <button class="button is-info is-fullwidth" type="submit">Save</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}

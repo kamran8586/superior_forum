@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% load custom_filters %}
+{% block title %}
+{{ post_user.first_name }}'s Profile
+{% endblock %}
+
+{% block content %}
+<section class="section">
+  <div class="container">
+    <div class="columns is-centered">
+      <div class="column is-two-thirds">
+        <div class="box">
+          <div class="content">
+            <div class="columns is-vcentered">
+              <div class="column is-one-quarter">
+                <figure class="image is-128x128">
+                  <img src="{{ post_user.profile.profile_pic.url }}"
+                    alt="Profile Picture" class="is-rounded"
+                    style="width: 128px; height: 128px;">
+                </figure>
+              </div>
+              <div class="column">
+                <div class="group-name is-flex">
+                  <h3 class="title mr-3">{{ post_user.get_full_name }}</h3>
+                  <p class>{% if user.is_authenticated and user.email != post_user.email %}
+                    {% if post_user|is_followed_by_user:user %}
+                    <a
+                      href="{% url 'authentication:unfollow' post_user.id %}">Unfollow</a>
+                    {% else %}
+                    <a
+                      href="{% url 'authentication:follow' post_user.id %}">Follow</a>
+                    {% endif %}
+                    {% endif %}</p>
+                </div>
+                <p><strong>Followers: </strong>
+                  {{post_user.profile.followed_by.count}}</p>
+                <p><strong>Location:</strong> {{ post_user.profile.location }}</p>
+                <p><strong>Bio:</strong> {{ post_user.profile.bio }}</p>
+                <p><strong>Date of Birth:</strong>
+                  {{post_user.profile.date_of_birth}}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}
