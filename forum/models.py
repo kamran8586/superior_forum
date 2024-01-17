@@ -13,8 +13,8 @@ class Post(models.Model):
     title = models.CharField(max_length=100)
     content = models.TextField()
     image = models.ImageField(upload_to='static/media/posts', blank=True)
-    # category = models.ForeignKey(Category , on_delete= models.CASCADE)
-    # tags = models.ManyToManyField(Tag , null=True  , blank=True)
+    category = models.ForeignKey(Category , on_delete= models.CASCADE)
+    tags = models.ManyToManyField(Tag)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
